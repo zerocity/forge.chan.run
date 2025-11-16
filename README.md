@@ -36,6 +36,9 @@ A modern fullstack TypeScript bootstrap project with Express backend and React f
 ## Quick Start
 
 ```bash
+# Trust the mise configuration (required after cloning)
+mise trust
+
 # Install all tools and dependencies
 mise install
 

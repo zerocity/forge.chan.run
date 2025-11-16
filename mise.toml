@@ -45,13 +45,12 @@ lockfile = true
 enter = [ 
     "{{config_root}}/.config/mise/tasks/utils/header.sh",
     "mise tasks -x", # global task doesn't work in "experimental_monorepo_root"
-    "echo '\n\nuse: mise tasks -x \nto see all task for a particular service'"
 ]
-
 
 [tasks.dns]
 hide = true
 description = 'securely manage local aliases for development servers'
+depends = ["//:utils:check-localias-capability"]
 run = "localias start -c .config/localias.yaml"
 
 [tasks.services]

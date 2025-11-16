@@ -8,8 +8,8 @@
 set -euo pipefail
 
 # Source gum helpers
-# shellcheck source=./lib/gum-helpers.sh
-source "$(dirname "$0")/lib/gum-helpers.sh"
+# shellcheck source=../../lib/gum-helpers.sh
+source "$MISE_PROJECT_ROOT/.config/lib/gum-helpers.sh"
 
 # Get task location
 get_task_location() {
