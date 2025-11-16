@@ -12,3 +12,28 @@ outputs = ['node_modules/.pnpm/lock.yaml']
 depends = [":pnpm-install"]
 description = 'start development server'
 run = "pnpm run dev"
+
+[tasks.test]
+depends = [":pnpm-install"]
+description = 'run unit tests'
+run = "pnpm test"
+
+[tasks.lint]
+depends = [":pnpm-install"]
+description = 'lint code with ESLint'
+run = "pnpm run lint"
+
+[tasks.lint-fix]
+depends = [":pnpm-install"]
+description = 'lint and fix code issues'
+run = "pnpm run lint:fix"
+
+[tasks.fmt]
+depends = [":pnpm-install"]
+description = 'format code with Prettier'
+run = "pnpm run fmt"
+
+[tasks.build]
+depends = [":pnpm-install"]
+description = 'build for production'
+run = "pnpm run build"

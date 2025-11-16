@@ -7,7 +7,7 @@ experimental_monorepo_root=true
 # Essential development tools
 usage = "2.4.0"
 shellcheck = "0.11.0"
-pitchfork = "0.2.1"
+pitchfork = "latest"
 
 "github:charmbracelet/gum" = "0.17.0"
 "github:peterldowns/localias" ='3.0.0+commit.43c3619'
@@ -38,16 +38,20 @@ FRONTEND_PORT = "5173"
 FRONTEND_URL = "https://www.testing.local"
 VITE_API_URL = "https://api.testing.local"
 
+[settings]
+lockfile = true
+
 [hooks]
-cd = [ 
-    ".config/mise/tasks/utils/header.sh",  # in hooks i can use mise tasks
-    "mise tasks" # global task doesn't work in "experimental_monorepo_root"
+enter = [ 
+    "{{config_root}}/.config/mise/tasks/utils/header.sh",
+    "mise tasks -x", # global task doesn't work in "experimental_monorepo_root"
+    "echo '\n\nuse: mise tasks -x \nto see all task for a particular service'"
 ]
+
 
 [tasks.dns]
 hide = true
 description = 'securely manage local aliases for development servers'
-confirm = "############### Starting dns proxy(localias) ###############\n\nThis service needs root permission to bind the services to port 80/443"
 run = "localias start -c .config/localias.yaml"
 
 [tasks.services]

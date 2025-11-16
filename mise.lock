@@ -1,0 +1,23 @@
+[[tools."github:charmbracelet/gum"]]
+version = "0.17.0"
+backend = "github:charmbracelet/gum"
+
+[[tools."github:peterldowns/localias"]]
+version = "3.0.0+commit.43c3619"
+backend = "github:peterldowns/localias"
+
+[[tools."npm:@anthropic-ai/claude-code"]]
+version = "2.0.25"
+backend = "npm:@anthropic-ai/claude-code"
+
+[[tools.pitchfork]]
+version = "0.2.1"
+backend = "aqua:jdx/pitchfork"
+
+[[tools.shellcheck]]
+version = "0.11.0"
+backend = "aqua:koalaman/shellcheck"
+
+[[tools.usage]]
+version = "2.4.0"
+backend = "aqua:jdx/usage"
