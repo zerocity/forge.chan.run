@@ -1,0 +1,14 @@
+[tools]
+node = "22"
+pnpm = "9"
+
+[tasks.pnpm-install]
+description = 'Installs and verify if all dependencies are fulfilled'
+run = 'pnpm install --config.confirmModulesPurge=false'
+sources = ['package.json', 'pnpm-lock.yaml', 'mise.toml']
+outputs = ['node_modules/.pnpm/lock.yaml']
+
+[tasks.dev]
+depends = [":pnpm-install"]
+description = 'start development server'
+run = "pnpm run dev"

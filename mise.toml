@@ -1,0 +1,98 @@
+# mise configuration
+# https://mise.jdx.dev/configuration.html
+experimental_monorepo_root=true
+
+
+[tools]
+# Essential development tools
+usage = "2.4.0"
+shellcheck = "0.11.0"
+pitchfork = "0.2.1"
+
+"github:charmbracelet/gum" = "0.17.0"
+"github:peterldowns/localias" ='3.0.0+commit.43c3619'
+"npm:@anthropic-ai/claude-code" = "latest"
+
+#https://github.com/peterldowns/localias
+
+
+[env]
+# Project root
+PROJECT_ROOT = "{{ config_root }}"
+
+# Node environment
+NODE_ENV = "development"
+
+# Database configuration
+DATABASE_URL = "postgresql://testuser:testpass@localhost:5432/testdb"
+POSTGRES_USER = "testuser"
+POSTGRES_PASSWORD = "testpass"
+POSTGRES_DB = "testdb"
+
+# Backend configuration
+BACKEND_PORT = "3000"
+BACKEND_URL = "https://api.testing.local"
+
+# Frontend configuration
+FRONTEND_PORT = "5173"
+FRONTEND_URL = "https://www.testing.local"
+VITE_API_URL = "https://api.testing.local"
+
+[hooks]
+cd = "mise tasks"
+
+[tasks.dns]
+hide = true
+description = 'securely manage local aliases for development servers'
+confirm = "############### Starting dns proxy(localias) ###############\n\nThis service needs root permission to bind the services to port 80/443"
+run = "localias start -c .config/localias.yaml"
+
+[tasks.services]
+hide = true
+description = "start all services which are defined in the pitchfork.toml"
+run = "pitchfork start --all"
+
+[tasks.start]
+description = "starts all services and auxiliaries"
+alias = "dev"
+run=[
+    { task = "dns"},
+    { task = "services"},
+    { task = "dev_success"}
+]
+
+[tasks.stop]
+description = "stops all services and auxiliaries"
+silent = true
+run=[
+    "localias stop -c .config/localias.yaml",
+    "pitchfork stop backend frontend docker", # pitchfork stop --all would also be nice 
+    "pitchfork clean"
+]
+
+[tasks.logs]
+description = "shows logs of services"
+run = "pitchfork logs"
+
+[tasks.dev_success]
+description = "it will show where the services are running"
+hide = true
+run = '''
+#!/usr/bin/env bash
+# 
+readonly COLOR_PINK=212
+readonly COLOR_GREEN=86
+readonly COLOR_ORANGE=214
+
+gum style --foreground "$COLOR_GREEN" --bold "✓ Development environment ready!"
+echo ""
+gum style --foreground "$COLOR_PINK" "Services:"
+gum style --foreground 241 "  Frontend: $FRONTEND_URL"
+gum style --foreground 241 "  Backend:  $BACKEND_URL"
+gum style --foreground 241 "  Database: postgresql://testuser:testpass@localhost:5432/testdb"
+
+# your script here
+'''
+
+
+

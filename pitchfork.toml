@@ -1,0 +1,19 @@
+# Pitchfork daemon configuration
+# https://github.com/jdx/pitchfork
+
+[daemons.docker]
+run = "docker compose --file .config/docker-compose.yml up"
+ready_http = { url = "http://localhost:5432" }
+
+[daemons.backend]
+run = "mise run //services/backend:dev"
+retry = 3
+ready_delay = 1000
+ready_output = "Health check: http://localhost:3000/health"
+
+[daemons.frontend]
+run = "mise run //services/frontend:dev --clearScreen false"
+retry = 1
+ready_delay = 1000
+ready_output = "Local:   http://localhost:5173/"
+
