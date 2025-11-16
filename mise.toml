@@ -39,7 +39,10 @@ FRONTEND_URL = "https://www.testing.local"
 VITE_API_URL = "https://api.testing.local"
 
 [hooks]
-cd = "mise tasks"
+cd = [ 
+    ".config/mise/tasks/utils/header.sh",  # in hooks i can use mise tasks
+    "mise tasks" # global task doesn't work in "experimental_monorepo_root"
+]
 
 [tasks.dns]
 hide = true

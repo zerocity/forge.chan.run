@@ -1,6 +1,6 @@
-# Dummy Test Project
+# Forge
 
-A fullstack TypeScript application with Express backend and React frontend, featuring comprehensive QA tooling.
+A modern fullstack TypeScript bootstrap project with Express backend and React frontend, featuring comprehensive development tooling and best practices.
 
 ## Tech Stack
 

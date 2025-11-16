@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: testing-postgres
+    container_name: forge-postgres
     ports:
       - "5432:5432"
     environment:
@@ -16,12 +16,12 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - testing-network
+      - forge-network
 
 volumes:
   postgres_data:
     driver: local
 
 networks:
-  testing-network:
+  forge-network:
     driver: bridge
