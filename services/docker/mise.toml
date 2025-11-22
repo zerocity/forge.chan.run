@@ -1,0 +1,6 @@
+[tasks.start]
+description = "starts all docker services"
+run=[
+    "docker compose -f ../../.config/docker-compose.yml up -d"
+]
+

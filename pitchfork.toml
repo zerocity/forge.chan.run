@@ -2,8 +2,14 @@
 # https://github.com/jdx/pitchfork
 
 [daemons.docker]
-run = "docker compose --file .config/docker-compose.yml up"
-ready_http = { url = "http://localhost:5432" }
+run = "mise run //services/docker:start"
+ready_output = "✓ Docker services ready!"
+
+[daemons.workflow]
+run = "mise run //services/workflow:dev"
+depends = ["docker"]
+ready_delay = 1000
+ready_output = "Airflow UI: http://localhost:8080"
 
 [daemons.backend]
 run = "mise run //services/backend:dev"

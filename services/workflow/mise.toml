@@ -1,0 +1,93 @@
+[tools]
+python = "3.11"
+uv = "latest"
+
+[tasks.deps]
+description = 'Installs and verify if all dependencies are fulfilled'
+run = 'uv sync --extra dev'
+sources = ['pyproject.toml', 'uv.lock', 'mise.toml']
+outputs = ['.venv']
+
+[tasks.dev]
+depends = ["deps"]
+description = 'get airflow'
+run = """
+#!/usr/bin/env bash
+set -e
+
+echo "🌊 Airflow Workflow Service"
+echo ""
+echo "📍 Airflow UI: http://localhost:8080"
+echo "📍 Airflow UI: http://airflow.testing.local"
+echo ""
+echo "💡 DAGs are auto-reloaded from: services/workflow/dags/"
+echo ""
+echo "Useful commands:"
+echo "  docker exec forge-airflow airflow dags list"
+echo "  docker exec forge-airflow airflow dags trigger example_hello_world"
+echo "  docker logs -f forge-airflow"
+"""
+
+[tasks.test]
+depends = ["deps"]
+description = 'run unit tests'
+run = "uv run pytest tests/ -v"
+
+[tasks.validate]
+description = 'validate DAG syntax'
+run = "uv run python -m py_compile dags/*.py"
+
+[tasks.lint]
+depends = ["deps"]
+description = 'run ruff linter'
+run = "uv run ruff check ."
+
+[tasks.lint-fix]
+depends = ["deps"]
+description = 'run ruff linter with auto-fix'
+run = "uv run ruff check --fix ."
+
+[tasks.format]
+depends = ["deps"]
+description = 'format code with ruff'
+run = "uv run ruff format ."
+
+[tasks.format-check]
+depends = ["deps"]
+description = 'check code formatting'
+run = "uv run ruff format --check ."
+
+[tasks.typecheck]
+depends = ["deps"]
+description = 'run mypy type checker'
+run = "uv run mypy dags/ tests/"
+
+[tasks.check]
+depends = ["deps"]
+description = 'run all checks (lint, format, typecheck, test)'
+run = """
+#!/usr/bin/env bash
+set -e
+
+echo "🔍 Running all checks..."
+echo ""
+
+echo "📝 Checking formatting..."
+uv run ruff format --check .
+
+echo ""
+echo "🧹 Running linter..."
+uv run ruff check .
+
+echo ""
+echo "🔎 Running type checker..."
+uv run mypy dags/ tests/
+
+echo ""
+echo "🧪 Running tests..."
+uv run pytest tests/ -v
+
+echo ""
+echo "✅ All checks passed!"
+"""
+

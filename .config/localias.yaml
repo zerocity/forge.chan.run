@@ -11,6 +11,7 @@
 #
 www.testing.local: 5173
 api.testing.local: 3000
+airflow.testing.local: 8080
 
 #frontend.test: 5173
 #backend.test: 3000

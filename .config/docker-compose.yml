@@ -10,6 +10,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-testdb}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./init-airflow-db.sh:/docker-entrypoint-initdb.d/init-airflow-db.sh
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-testuser} -d ${POSTGRES_DB:-testdb}"]
       interval: 5s
@@ -18,8 +19,54 @@ services:
     networks:
       - forge-network
 
+  airflow:
+    image: apache/airflow:3.1.3-python3.11
+    container_name: forge-airflow
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # Core configuration
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "False"
+
+      # Development: Disable authentication - everyone is admin
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "True"
+
+      # Database configuration
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER:-testuser}:${POSTGRES_PASSWORD:-testpass}@postgres:5432/airflow
+
+      # Webserver configuration
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "True"
+      #AIRFLOW__WEBSERVER__SECRET_KEY: development-secret-key-change-in-production
+    volumes:
+      - ../services/workflow/dags:/opt/airflow/dags
+      - airflow_logs:/opt/airflow/logs
+      - airflow_plugins:/opt/airflow/plugins
+
+    ports:
+      - "8080:8080"
+
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+    networks:
+      - forge-network
+
+    command: standalone
+
 volumes:
   postgres_data:
+    driver: local
+  airflow_logs:
+    driver: local
+  airflow_plugins:
     driver: local
 
 networks:

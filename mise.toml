@@ -38,6 +38,12 @@ FRONTEND_PORT = "5173"
 FRONTEND_URL = "https://www.testing.local"
 VITE_API_URL = "https://api.testing.local"
 
+# Airflow configuration
+AIRFLOW_HOME = "{{ config_root }}/.config/.airflow"
+AIRFLOW_URL = "https://airflow.testing.local"
+AIRFLOW_PORT = "8080"
+DAGS_FOLDER = "{{ config_root }}/services/workflow/dags"
+
 [settings]
 lockfile = true
 
@@ -64,6 +70,7 @@ alias = "dev"
 run=[
     { task = "dns"},
     { task = "services"},
+    { task = "utils:health-check"},
     { task = "dev_success"}
 ]
 
@@ -95,7 +102,11 @@ echo ""
 gum style --foreground "$COLOR_PINK" "Services:"
 gum style --foreground 241 "  Frontend: $FRONTEND_URL"
 gum style --foreground 241 "  Backend:  $BACKEND_URL"
+gum style --foreground 241 "  Airflow:  $AIRFLOW_URL (admin/admin)"
+echo ""
+gum style --foreground "$COLOR_PINK" "Infrastructure:"
 gum style --foreground 241 "  Database: postgresql://testuser:testpass@localhost:5432/testdb"
+gum style --foreground 241 "  Airflow DB: postgresql://testuser:testpass@localhost:5432/airflow"
 
 # your script here
 '''

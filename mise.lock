@@ -14,6 +14,10 @@ backend = "npm:@anthropic-ai/claude-code"
 version = "0.2.1"
 backend = "aqua:jdx/pitchfork"
 
+[[tools.python]]
+version = "3.11.14"
+backend = "core:python"
+
 [[tools.shellcheck]]
 version = "0.11.0"
 backend = "aqua:koalaman/shellcheck"
@@ -21,3 +25,7 @@ backend = "aqua:koalaman/shellcheck"
 [[tools.usage]]
 version = "2.4.0"
 backend = "aqua:jdx/usage"
+
+[[tools.uv]]
+version = "0.8.19"
+backend = "aqua:astral-sh/uv"

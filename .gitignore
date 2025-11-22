@@ -54,3 +54,5 @@ playwright/.cache/
 
 # Docker
 .docker/
+*.pyc
+services/workflow/.gitignore
