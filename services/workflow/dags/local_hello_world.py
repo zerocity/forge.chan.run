@@ -15,7 +15,7 @@ from airflow.providers.standard.operators.python import PythonOperator
 
 def hello_world():
     """Simple task that prints Hello World"""
-    print("Hello World from Airflow!")
+    print("Hello World from local Airflow!")
     print(f"Execution date: {datetime.now()}")
     return "Success"
 
@@ -33,12 +33,12 @@ default_args = {
 
 # Define the DAG
 with DAG(
-    "example_hello_world",
+    "local_hello_world",
     default_args=default_args,
     description="A simple Hello World DAG",
     schedule=timedelta(days=1),
     catchup=False,
-    tags=["example", "hello_world"],
+    tags=["local"],
 ) as dag:
     # Define the task
     hello_task = PythonOperator(

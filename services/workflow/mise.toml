@@ -2,15 +2,24 @@
 python = "3.11"
 uv = "latest"
 
+[settings]
+experimental = true
+
+[settings.python]
+uv_venv_auto = true
+
+[env]
+'_'.file = { path = ".env" }
+
 [tasks.deps]
 description = 'Installs and verify if all dependencies are fulfilled'
 run = 'uv sync --extra dev'
 sources = ['pyproject.toml', 'uv.lock', 'mise.toml']
 outputs = ['.venv']
 
-[tasks.dev]
+[tasks.connections]
 depends = ["deps"]
-description = 'get airflow'
+description = 'Setup Airflow connections'
 run = """
 #!/usr/bin/env bash
 set -e
@@ -20,12 +29,19 @@ echo ""
 echo "📍 Airflow UI: http://localhost:8080"
 echo "📍 Airflow UI: http://airflow.testing.local"
 echo ""
-echo "💡 DAGs are auto-reloaded from: services/workflow/dags/"
-echo ""
-echo "Useful commands:"
-echo "  docker exec forge-airflow airflow dags list"
-echo "  docker exec forge-airflow airflow dags trigger example_hello_world"
-echo "  docker logs -f forge-airflow"
+
+# Check if DAG_REGISTRY connection exists
+if docker exec forge-airflow airflow connections get 'DAG_REGISTRY' &>/dev/null; then
+  echo "✅ DAG_REGISTRY connection already exists"
+else
+  echo "📝 Creating DAG_REGISTRY connection..."
+  docker exec forge-airflow airflow connections add 'DAG_REGISTRY' \
+    --conn-type git \
+    --conn-password "$GITHUB_DAG_REGISTRY_TOKEN" \
+    --conn-host 'https://github.com/zerocity/airflow_dag_registry.git'
+  echo "✅ DAG_REGISTRY connection created successfully"
+fi
+
 """
 
 [tasks.test]

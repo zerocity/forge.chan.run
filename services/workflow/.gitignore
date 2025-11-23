@@ -53,9 +53,10 @@ build/
 
 # Airflow specific (if running locally)
 airflow.db
-airflow.cfg
 logs/
 plugins/
 standalone_admin_password.txt
 webserver_config.py
-*.pyc
+
+# Note: config/airflow.cfg is now tracked (contains GitDagBundle setup)
+# but logs/ and plugins/ are generated and should be ignored
