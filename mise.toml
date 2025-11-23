@@ -71,6 +71,7 @@ run=[
     { task = "dns"},
     { task = "services"},
     { task = "utils:health-check"},
+    { task = "//services/workflow:connections"},
     { task = "dev_success"}
 ]
 
@@ -80,6 +81,7 @@ silent = true
 run=[
     "localias stop -c .config/localias.yaml",
     "pitchfork stop backend frontend docker", # pitchfork stop --all would also be nice 
+    { task = "//services/docker:stop"},
     "pitchfork clean"
 ]
 

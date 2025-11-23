@@ -3,13 +3,12 @@
 
 [daemons.docker]
 run = "mise run //services/docker:start"
-ready_output = "✓ Docker services ready!"
 
-[daemons.workflow]
-run = "mise run //services/workflow:dev"
-depends = ["docker"]
-ready_delay = 1000
-ready_output = "Airflow UI: http://localhost:8080"
+#[daemons.workflow]
+#run = "mise run //services/workflow:dev"
+#depends = ["docker"]
+#ready_delay = 1000
+#ready_output = "Airflow UI: http://localhost:8080"
 
 [daemons.backend]
 run = "mise run //services/backend:dev"
