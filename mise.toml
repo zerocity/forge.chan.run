@@ -71,7 +71,7 @@ run=[
     { task = "dns"},
     { task = "services"},
     { task = "utils:health-check"},
-    { task = "//services/workflow:connections"},
+    #{ task = "//services/workflow:connections"},
     { task = "dev_success"}
 ]
 

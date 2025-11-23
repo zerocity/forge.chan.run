@@ -25,6 +25,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    env_file:
+      - ../services/workflow/.env
     environment:
       # Core configuration
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
@@ -35,10 +37,17 @@ services:
       # Development: Disable authentication - everyone is admin
       AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "True"
 
+      # Security secrets (loaded from .env file)
+      AIRFLOW__CORE__FERNET_KEY: "${AIRFLOW__CORE__FERNET_KEY}"
+      AIRFLOW__API_AUTH__JWT_SECRET: "${AIRFLOW__API_AUTH__JWT_SECRET}"
+
+      # DAG Registry Git Connection (JSON format - automatically created on startup)
+      AIRFLOW_CONN_DAG_REGISTRY: '{"conn_type":"git","password":"${GITHUB_DAG_REGISTRY_TOKEN}","host":"https://github.com/zerocity/airflow_dag_registry.git"}'
+
       # Database configuration
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER:-testuser}:${POSTGRES_PASSWORD:-testpass}@postgres:5432/airflow
 
-# DAG Bundle Configuration - Git-based DAG registry + local dags
+      # DAG Bundle Configuration - Git-based DAG registry + local dags
       # Using pipe syntax for better readability
       AIRFLOW__DAG_PROCESSOR__DAG_BUNDLE_CONFIG_LIST: |
         [
